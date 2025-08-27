@@ -2,83 +2,89 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Slap the Potato</title>
+  <title>Catch the Chicken</title>
   <style>
     body {
-      font-family: sans-serif;
+      font-family: Arial, sans-serif;
       text-align: center;
-      background-color: #fef3bd;
+      background-color: #fffbe6;
+      margin: 0;
+      overflow: hidden;
     }
-    #potato {
+    #chicken {
       position: absolute;
-      width: 100px;
-      height: 100px;
-      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Potato_icon.svg/1024px-Potato_icon.svg.png');
+      width: 80px;
+      height: 80px;
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Chicken_icon.svg/1024px-Chicken_icon.svg.png');
       background-size: cover;
       cursor: pointer;
       display: none;
     }
     #scoreboard {
-      margin-top: 20px;
       font-size: 24px;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
 
-<h1>🥔 Slap the Potato!</h1>
-<p>Click the potato before it vanishes. Miss 5 times and it's game over!</p>
-<div id="scoreboard">Score: 0 | Misses: 0</div>
-<div id="potato"></div>
+  <h1>🐔 Catch the Chicken!</h1>
+  <p>Click the chicken before it escapes. Miss 5 times and you're toast.</p>
+  <div id="scoreboard">Score: 0 | Misses: 0</div>
+  <div id="chicken"></div>
 
-<script>
-  const potato = document.getElementById('potato');
-  const scoreboard = document.getElementById('scoreboard');
-  let score = 0;
-  let misses = 0;
+  <script>
+    const chicken = document.getElementById('chicken');
+    const scoreboard = document.getElementById('scoreboard');
+    let score = 0;
+    let misses = 0;
+    let speed = 1500;
 
-  function randomPosition() {
-    const x = Math.random() * (window.innerWidth - 100);
-    const y = Math.random() * (window.innerHeight - 100);
-    potato.style.left = `${x}px`;
-    potato.style.top = `${y}px`;
-  }
-
-  function showPotato() {
-    randomPosition();
-    potato.style.display = 'block';
-
-    setTimeout(() => {
-      if (potato.style.display === 'block') {
-        potato.style.display = 'none';
-        misses++;
-        updateScore();
-        checkGameOver();
-      }
-    }, 1000 + Math.random() * 1000); // stays for 1–2 seconds
-  }
-
-  function updateScore() {
-    scoreboard.textContent = `Score: ${score} | Misses: ${misses}`;
-  }
-
-  function checkGameOver() {
-    if (misses >= 5) {
-      alert('The potato wins! 🥔💨');
-      score = 0;
-      misses = 0;
-      updateScore();
+    function randomPosition() {
+      const x = Math.random() * (window.innerWidth - 80);
+      const y = Math.random() * (window.innerHeight - 80);
+      chicken.style.left = `${x}px`;
+      chicken.style.top = `${y}px`;
     }
-  }
 
-  potato.addEventListener('click', () => {
-    score++;
-    potato.style.display = 'none';
-    updateScore();
-  });
+    function showChicken() {
+      randomPosition();
+      chicken.style.display = 'block';
 
-  setInterval(showPotato, 1500);
-</script>
+      const hideTimeout = setTimeout(() => {
+        if (chicken.style.display === 'block') {
+          chicken.style.display = 'none';
+          misses++;
+          updateScore();
+          checkGameOver();
+        }
+      }, speed);
+
+      chicken.onclick = () => {
+        clearTimeout(hideTimeout);
+        score++;
+        chicken.style.display = 'none';
+        updateScore();
+        speed = Math.max(500, speed - 100); // Increase difficulty
+      };
+    }
+
+    function updateScore() {
+      scoreboard.textContent = `Score: ${score} | Misses: ${misses}`;
+    }
+
+    function checkGameOver() {
+      if (misses >= 5) {
+        alert('The chicken escaped! 🐔💨 Try again.');
+        score = 0;
+        misses = 0;
+        speed = 1500;
+        updateScore();
+      }
+    }
+
+    setInterval(showChicken, 1800);
+  </script>
 
 </body>
 </html>
